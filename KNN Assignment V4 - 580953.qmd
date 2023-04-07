@@ -1,0 +1,113 @@
+---
+title: "IDM Assignment - 580953 - V1"
+format: html
+editor: visual
+---
+
+url \<- "https://raw.githubusercontent.com/HAN-M3DM-Data-Mining/data-mining-s2y2223-AzizKna/master/datasets/KNN-diabetes.csv"
+
+rawDF \<- read_csv(url)
+
+str(rawDF)
+
+rawDF
+
+```{r}
+install.packages("readr")
+library(tidyverse)
+library(googlesheets4)
+library(class)
+library(caret)
+
+url <- "https://raw.githubusercontent.com/HAN-M3DM-Data-Mining/assignments/master/datasets/KNN-diabetes.csv"
+
+rawDF <- read_csv(url)
+str(rawDF)
+```
+
+```{r}
+# Read the data into a data frame
+diabetes <- rawDF
+
+```
+
+```{r}
+# read in the data
+df <- diabetes
+
+# select the columns to normalize
+cols_to_normalize <- names(df)[1:8]
+
+# perform Min-Max scaling using scale()
+df[cols_to_normalize] <- scale(df[cols_to_normalize], center = FALSE, scale = apply(df[cols_to_normalize], 2, max) - apply(df[cols_to_normalize], 2, min))
+
+# print the first few rows to check the results
+head(df)
+```
+
+```{r}
+df$Outcome <- as.factor(df$Outcome)
+```
+
+```{r}
+trainDF_feat <- df[1:537,  ]
+testDF_feat <- df[538:768,  ]
+
+trainDF_labels <- df[1:537,  ]
+testDF_labels <- df[538:768,  ]
+
+# create the training and testing sets
+train_features <- trainDF_feat[, -9]
+train_labels <- trainDF_labels[, 9]
+test_features <- testDF_feat[, -9]
+test_labels <- testDF_labels[, 9]
+```
+
+```{r}
+df_test_pred <- knn(train = as.matrix(train_features), test = as.matrix(test_features), cl = as.matrix(train_labels), k = 20)
+head(df_test_pred)
+```
+
+```{r}
+confusionMatrix(df_test_pred, test_labels[[1]], positive = NULL, dnn = c("Prediction", "True"))
+```
+
+```{r}
+df_test_pred2 <- knn(train = as.matrix(train_features), test = as.matrix(test_features), cl = as.matrix(train_labels), k = 50)
+head(df_test_pred2)
+
+confusionMatrix(df_test_pred2, test_labels[[1]], positive = NULL, dnn = c("Prediction", "True"))
+
+```
+
+```{r}
+df_test_pred3 <- knn(train = as.matrix(train_features), test = as.matrix(test_features), cl = as.matrix(train_labels), k = 10)
+head(df_test_pred3)
+
+confusionMatrix(df_test_pred3, test_labels[[1]], positive = NULL, dnn = c("Prediction", "True"))
+
+```
+
+```{r}
+set.seed(123) # set the seed
+df_test_pred4 <- knn(train = as.matrix(train_features), test = as.matrix(test_features), cl = as.matrix(train_labels), k = 10)
+head(df_test_pred4)
+
+confusionMatrix(df_test_pred4, test_labels[[1]], positive = NULL, dnn = c("Prediction", "True"))
+```
+
+```{r}
+set.seed(123) # set the seed
+df_test_pred5 <- knn(train = as.matrix(train_features), test = as.matrix(test_features), cl = as.matrix(train_labels), k = 24)
+head(df_test_pred5)
+
+confusionMatrix(df_test_pred5, test_labels[[1]], positive = NULL, dnn = c("Prediction", "True"))
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
